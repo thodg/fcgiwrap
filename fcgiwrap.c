@@ -413,8 +413,8 @@ static char *get_cgi_filename(void) /* and fixup environment */
 	buf = malloc(buflen);
 	if (!buf) goto err;
 
-	strcpy(buf, docroot);
-	strcpy(buf + docrootlen, scriptname);
+	strlcpy(buf, docroot, buflen);
+	strlcpy(buf + docrootlen, scriptname, buflen - docrootlen);
 	pathinfo = strdup(buf);
 	if (!pathinfo) {
 		goto err;
@@ -737,7 +737,7 @@ static int setup_socket(char *url) {
 
 		sockaddr_size = sizeof sa.sa_un;
 		sa.sa_un.sun_family = AF_UNIX;
-		strcpy(sa.sa_un.sun_path, p);
+		strlcpy(sa.sa_un.sun_path, p, sizeof(sa.sa_un.sun_path));
 	} else if (!strncmp(p, "tcp:", sizeof("tcp:") - 1)) {
 		p += sizeof("tcp:") - 1;
 
